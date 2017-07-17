@@ -1,6 +1,6 @@
 # LRVA (Linear Regression with Validated Association)
 
-Implementation of the Precision Lasso in this paper:
+Implementation of LRVA in this paper:
 
     ''Wang H, Aragam B, Lee S, Xing EP, and Wu W. Discovering Weaker Genetic Associations with Validated Association, with Studies of Alzheimer's Disease and Drug Abuse Disorder''
 
