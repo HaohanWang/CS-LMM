@@ -17,7 +17,7 @@ from optparse import OptionParser, OptionGroup
 
 usage = """usage: %prog [options] -n fileName
 This program provides the basic usage to LRVA, e.g:
-python lrva.py -n data/snps.132k
+python lrva.py -n data/mice.plink
 	    """
 parser = OptionParser(usage=usage)
 
@@ -181,4 +181,4 @@ for i in range(len(bn)):
 
 out.close()
 
-print 'Computation ends normally, check the output file at ', outFile
+print '\nComputation ends normally, check the output file at ', outFile

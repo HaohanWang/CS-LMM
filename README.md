@@ -17,7 +17,7 @@ LRVA is used to detect the weaker genetic association conditioned on the stronge
 ## An Example Command:
 
 ```
-python lrva.py -n data/snps.123k
+python lrva.py -n data/mice.plink
 ```
 #### Data Support
 * LRVA currently supports CSV and binary PLINK files.
