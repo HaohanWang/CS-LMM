@@ -105,6 +105,8 @@ generateValidatedIndex(options.fileValidated, Xname, X, Y)
 learningRate = 1e-6
 betaM = None
 
+print 'Computation starts ... '
+
 if options.snum is not None: # select for a fix number of variable
     snum = float(options.snum)
     min_lambda_default = 1e-50
@@ -173,3 +175,5 @@ for i in range(len(bn)):
     outputResult(i + 1, bn[i][1], bn[i][0])
 
 out.close()
+
+print 'Computation ends'
