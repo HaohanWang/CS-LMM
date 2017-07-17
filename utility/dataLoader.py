@@ -26,7 +26,6 @@ class FileReader():
         [n, p] = X.shape
         dis = np.zeros([n, n])
         for i in range(n):
-            print i
             for j in range(i+1, n):
                 d = np.nanmean(np.square(X[i,:]-X[j,:]))
                 dis[i,j] = d
@@ -36,22 +35,21 @@ class FileReader():
 
         missing = {}
         for x in mx:
-            if x not in mx:
-                missing[mx] = 1
+            if x not in missing:
+                missing[x] = 1
             else:
-                missing[mx] += 1
+                missing[x] += 1
 
-        ms = sorted(missing.items(), operator.itemgetter(missing, 1))
+        ms = sorted(missing.items(), key=operator.itemgetter(1))
         ms.reverse()
         for (x, k) in ms:
             neighbors = np.argsort(dis[x,:])[1:]
             for i in range(n-1):
                 n = neighbors[i]
-                ind = np.where(np.isnan(X[x,:])==1)
+                ind = np.where(np.isnan(X[x,:])==1)[0]
                 if len(ind) == 0:
                     break
                 X[x,ind] = X[n,ind]
-                print ind
         return X
 
 
