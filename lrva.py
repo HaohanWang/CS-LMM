@@ -15,9 +15,9 @@ def outputResult(rank, id, beta):
 
 from optparse import OptionParser, OptionGroup
 
-usage = """usage: %prog [options] -t fileType(plink/csv) -n fileName
-This program provides the basic usage to precision lasso, e.g:
-python runPL.py -t csv -n data/toy
+usage = """usage: %prog [options] -n fileName
+This program provides the basic usage to LRVA, e.g:
+python lrva.py -n data/snps.132k
 	    """
 parser = OptionParser(usage=usage)
 
@@ -35,8 +35,8 @@ modelGroup.add_option("--lambda", dest="lmbd", default=None,
 modelGroup.add_option("--snum", dest="snum", default=None,
                       help="the number of targeted variables the model selects. If neither lambda or snum is given, cross validation will be run.")
 modelGroup.add_option("-s", action='store_true', dest="stable", default=False, help="Stability selection")
-modelGroup.add_option('-q', action='store_true', dest='quiet', default=False, help='Run in quite mode')
-modelGroup.add_option('-m', action='store_true', dest='missing', default=False, help='Run in quite mode')
+modelGroup.add_option('-q', action='store_true', dest='quiet', default=False, help='Run in quiet mode')
+modelGroup.add_option('-m', action='store_true', dest='missing', default=False, help='Run without missing genotype imputation')
 
 ## advanced options
 parser.add_option_group(dataGroup)
@@ -103,7 +103,9 @@ X, Y, Xname = reader.readFiles()
 
 model = LRVA()
 
-generateValidatedIndex(options.fileValidated, Xname, X, Y)
+Ind = generateValidatedIndex(options.fileValidated, Xname, X, Y)
+model.setKnownInd(Ind)
+model.setUp(X, Y)
 
 learningRate = 1e-6
 betaM = None
@@ -139,12 +141,12 @@ if options.snum is not None: # select for a fix number of variable
         if c < minFactor*snum:  # Regularizer too strong
             max_lambda = lmbd
             if not options.quiet:
-                print '\tRegularization is too strong, shrink lambdas'
+                print '\tRegularization is too strong, shrink lambda'
         elif c > maxFactor*snum:  # Regularizer too weak
             min_lambda = lmbd
             betaM = beta
             if not options.quiet:
-                print '\tRegularization is too weak, enlarge lambdas'
+                print '\tRegularization is too weak, enlarge lambda'
         else:
             betaM = beta
             break

@@ -16,7 +16,13 @@ def generateValidatedIndex(fileName, Xname, X, y):
                 ind.append(i)
         return np.array(ind)
     else:
+        print 'There is no validated markers available, first conducting wald test to search most significant SNPs'
         model = WaldTest()
         model.fit(X, y)
         beta = model.getBeta()
-        return np.where(beta!=0)[0]
+        ind = np.where(beta!=0)[0]
+        print '\tWald testing identified ', len(ind), 'significantly associated SNPs'
+        if len(ind)>5:
+            print '\tLRVA will only use the most significant five ones'
+            ind = np.argsort(beta)[-5:]
+        return ind

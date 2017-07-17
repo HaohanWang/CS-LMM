@@ -53,6 +53,10 @@ class FileReader():
                 X[x,ind] = X[n,ind]
         return X
 
+    def simpleImputation(self, X):
+        X[np.isnan(X)] = 0
+        return X
+
 
     def readFiles(self):
         print 'Reading Data ...'
@@ -80,9 +84,13 @@ class FileReader():
             except:
                 Xname = ['geno ' + str(i+1) for i in range(X.shape[1])]
         if self.imputationFlag:
-            return self.imputation(X), y, Xname
+            X = self.imputation(X)
+            keep = True - np.isnan(y)
+            return X[keep,:], y[keep], Xname
         else:
-            return X, y, Xname
+            X = self.simpleImputation(X)
+            keep = True - np.isnan(y)
+            return X[keep,:], y[keep], Xname
 
 if __name__ == '__main__':
     fr = FileReader(fileName='../data/snps.132k')
