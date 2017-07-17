@@ -22,7 +22,8 @@ class FileReader():
         return np.array(d)
 
     def imputation(self, X):
-        print 'Missing genotype imputation ...'
+        print 'Missing genotype imputation ... '
+        print 'This may take a while, use -m to skip this step'
         [n, p] = X.shape
         dis = np.zeros([n, n])
         for i in range(n):

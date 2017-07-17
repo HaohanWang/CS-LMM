@@ -36,6 +36,7 @@ modelGroup.add_option("--snum", dest="snum", default=None,
                       help="the number of targeted variables the model selects. If neither lambda or snum is given, cross validation will be run.")
 modelGroup.add_option("-s", action='store_true', dest="stable", default=False, help="Stability selection")
 modelGroup.add_option('-q', action='store_true', dest='quiet', default=False, help='Run in quite mode')
+modelGroup.add_option('-m', action='store_true', dest='missing', default=False, help='Run in quite mode')
 
 ## advanced options
 parser.add_option_group(dataGroup)
@@ -95,7 +96,9 @@ if len(args) != 0:
 
 outFile = options.fileName + '.output'
 
-reader = FileReader(options.fileType, options.fileName)
+print 'Running ... '
+
+reader = FileReader(fileName=options.fileName, fileType=options.fileType, imputation=(not options.missing))
 X, Y, Xname = reader.readFiles()
 
 model = LRVA()
@@ -176,4 +179,4 @@ for i in range(len(bn)):
 
 out.close()
 
-print 'Computation ends'
+print 'Computation ends normally, check the output file at ', outFile
