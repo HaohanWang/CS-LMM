@@ -4,7 +4,7 @@ import numpy as np
 
 from Lasso import Lasso
 
-class LRVA:
+class VARRO:
     def __init__(self, lam=1., lr1=1e-1, lr2=1e-6, tol=1e-5, maxIter=500, snpFile=True, logistic=False, weighted=False):
         self.lam = lam
         self.lr1 = lr1
