@@ -6,7 +6,7 @@ Implementation of CS-LMM in this paper:
 
 ## Introduction
 
-VARRO is used to detect the weaker genetic association conditioned on the stronger validated associations.
+CS-LMM is used to detect the weaker genetic association conditioned on the stronger validated associations.
 
 ## File Structure:
 
