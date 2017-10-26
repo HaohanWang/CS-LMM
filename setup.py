@@ -2,12 +2,12 @@
 from distutils.core import setup
 
 setup(
-      name='lrva',
+      name='cslmm',
       version='0.99',
       author = "Haohan Wang",
-      author_email='haohanw@andrew.cmu.edu',
-      url = "https://github.com/HaohanWang/LRVA",
-      description = 'Discovering Weaker Genetic Associations with Validated Association, with Studies of Alzheimer\'s Disease and Drug Abuse Disorder',
+      author_email='haohanw@cs.cmu.edu',
+      url = "https://github.com/HaohanWang/CS-LMM",
+      description = "Discovering Weaker Genetic Associations Guided by Known Associations, with Application to Alcoholism and Alzheimer's Disease Studies",
       packages=['models', 'utility'],
-      scripts=['lrva.py'],
+      scripts=['cslmm.py'],
     )

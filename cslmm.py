@@ -85,7 +85,7 @@ import numpy as np
 from utility.dataLoader import FileReader
 from utility.stableSelection import stableSelection
 from utility.validateIndex import generateValidatedIndex
-from models.VARRO import VARRO
+from models.CSLMM import CSLMM
 
 fileType = 0
 IN = None
@@ -101,7 +101,7 @@ print 'Running ... '
 reader = FileReader(fileName=options.fileName, fileType=options.fileType, imputation=(not options.missing))
 X, Y, Xname = reader.readFiles()
 
-model = VARRO()
+model = CSLMM()
 
 Ind = generateValidatedIndex(options.fileValidated, Xname, X, Y)
 model.setKnownInd(Ind)

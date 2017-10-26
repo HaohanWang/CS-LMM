@@ -1,11 +1,14 @@
 __author__ = 'Haohan Wang'
 
-import numpy as np
+import scipy.optimize as opt
 
 from Lasso import Lasso
 
-class VARRO:
-    def __init__(self, lam=1., lr1=1e-1, lr2=1e-6, tol=1e-5, maxIter=500, snpFile=True, logistic=False, weighted=False):
+from helpingMethods import *
+
+
+class CSLMM:
+    def __init__(self, lam=1., lr1=1., lr2=1., tol=1e-5, maxIter=500, snpFile=True, logistic=False, weighted=False):
         self.lam = lam
         self.lr1 = lr1
         self.lr2 = lr2
@@ -57,9 +60,9 @@ class VARRO:
                     c = len(np.where(r >= 1)[0])
                     if c > 0:
                         result.append(i)
-                    else: # if there is no linear dependent relationship, test for correlation
+                    else:  # if there is no linear dependent relationship, test for correlation
                         for j in range(self.X1.shape[1]):
-                            col = self.X1[:,j]
+                            col = self.X1[:, j]
                             cor = np.corrcoef(col, X2)
                             if np.abs(cor[0][1]) > 0.9:
                                 result.append(i)
@@ -71,19 +74,19 @@ class VARRO:
     def cross_val_score(self, clf, X, y, cv=5):
         scores = []
         [n, p] = X.shape
-        b = n/cv
+        b = n / cv
         for i in range(cv):
-            ind = np.arange(b) + b*i
+            ind = np.arange(b) + b * i
             Xtr = np.delete(X, ind, axis=0)
             ytr = np.delete(y, ind, axis=0)
-            Xte = X[ind,:]
+            Xte = X[ind, :]
             yte = y[ind]
             clf.fit(Xtr, ytr)
             ypr = clf.predict(Xte)
             if np.mean(np.abs(ypr)) == 0:
                 s = 1e100
             else:
-                s = np.mean(np.square(ypr-yte))
+                s = np.mean(np.square(ypr - yte))
             scores.append(s)
         return scores
 
@@ -95,7 +98,53 @@ class VARRO:
         yr = self.phase1model.predict(X)
         return beta, yr
 
-    def setUp(self, X, y):
+    def populationStratification(self, X, y, K=None, S=None, U=None):
+        [n_s, n_f] = X.shape
+        if K is None:
+            K = np.dot(X, X.T)
+
+        S, U, ldelta0 = self.nullModel(y=y, K=K, S=S, U=U, numintervals=100, ldeltamin=-5, ldeltamax=5, p=n_f)
+
+        delta0 = scipy.exp(ldelta0)
+        Sdi = 1. / (S + delta0)
+        Sdi_sqrt = scipy.sqrt(Sdi)
+        SUX = scipy.dot(U.T, X)
+        SUX = SUX * scipy.tile(Sdi_sqrt, (n_f, 1)).T
+        SUy = scipy.dot(U.T, y.reshape([y.shape[0], 1]))
+        SUy = SUy * scipy.reshape(Sdi_sqrt, (n_s, 1))
+
+        return SUX, SUy.reshape(SUy.shape[0])
+
+    def nullModel(self, y, K, S=None, U=None, numintervals=500, ldeltamin=-5, ldeltamax=5, scale=0, p=1):
+        ldeltamin += scale
+        ldeltamax += scale
+
+        if S is None or U is None:
+            S, U = linalg.eigh(K)
+
+        Uy = scipy.dot(U.T, y)
+
+        # grid search
+        nllgrid = scipy.ones(numintervals + 1) * scipy.inf
+        ldeltagrid = scipy.arange(numintervals + 1) / (numintervals * 1.0) * (ldeltamax - ldeltamin) + ldeltamin
+        for i in scipy.arange(numintervals + 1):
+            nllgrid[i] = nLLeval(ldeltagrid[i], Uy, S)  # the method is in helpingMethods
+
+        nllmin = nllgrid.min()
+        ldeltaopt_glob = ldeltagrid[nllgrid.argmin()]
+
+        for i in scipy.arange(numintervals - 1) + 1:
+            if (nllgrid[i] < nllgrid[i - 1] and nllgrid[i] < nllgrid[i + 1]):
+                ldeltaopt, nllopt, iter, funcalls = opt.brent(nLLeval, (Uy, S),
+                                                              (ldeltagrid[i - 1], ldeltagrid[i], ldeltagrid[i + 1]),
+                                                              full_output=True)
+                if nllopt < nllmin:
+                    nllmin = nllopt
+                    ldeltaopt_glob = ldeltaopt
+        return S, U, ldeltaopt_glob
+
+    def setUp(self, X, y, K=None, S=None, U=None):
+        # X, y = self.populationStratification(X, y, K, S, U)
         self.y = y
         [n, p] = X.shape
         # setup
@@ -113,12 +162,13 @@ class VARRO:
         self.b1, yr = self.fitBeta(self.X1, y)
         self.c = np.min(np.abs(self.b1))
         if self.logistic:
-            y_tmp = y+1e-5
-            self.y2 = -np.log(np.abs(1-(y_tmp))/(y_tmp)) - yr
+            y_tmp = y + 1e-5
+            self.y2 = -np.log(np.abs(1 - (y_tmp)) / (y_tmp)) - yr
         else:
             self.y2 = y - yr
         self.bias = yr
         self.nkI = []
+        self.X2, self.y2 = self.populationStratification(self.X2, self.y2)
 
     def assemble(self):
         p = len(self.kI) + len(self.kIComplementary) + len(self.kINone)
