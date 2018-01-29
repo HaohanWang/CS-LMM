@@ -1,9 +1,9 @@
 __author__ = 'Haohan Wang'
 
-# Main file for usage of LRVA (Linear Regression with Validated Association)
+# Main file for usage of (CS-LMM) Constrained Sparse multi-locus Linear Mixed Model
 # Cite information:
 # Wang H, Aragam B, Lee S, Xing EP, and Wu W.
-# Discovering Weaker Genetic Associations with Validated Association, with Studies of Alzheimer's Disease and Drug Abuse Disorder
+# Discovering Weaker Genetic Associations Guided by Known Associations, with Application to Alcoholism and Alzheimer's Disease Studies
 #
 
 def printOutHead(): out.write("\t".join(["RANK", "SNP_ID", "EFFECT_SIZE_ABS"]) + "\n")
@@ -16,8 +16,8 @@ def outputResult(rank, id, beta):
 from optparse import OptionParser, OptionGroup
 
 usage = """usage: %prog [options] -n fileName
-This program provides the basic usage to LRVA, e.g:
-python lrva.py -n data/mice.plink
+This program provides the basic usage to CS-LMM, e.g:
+python cslmm.py -n data/mice.plink
 	    """
 parser = OptionParser(usage=usage)
 
