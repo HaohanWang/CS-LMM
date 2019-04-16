@@ -2,7 +2,7 @@
 
 Implementation of CS-LMM in this paper:
 
-    ''Wang H, Aragam B, Lee S, Xing EP, and Wu W. Discovering Weaker Genetic Associations Guided by Known Associations, with Application to Alcoholism and Alzheimer's Disease Studies''
+    ''Wang H, Vanyukov MM, Xing EP, and Wu W. Discovering Genetic Variants with Weak Associations Guided by Known Variants''
 
 ## Introduction
 
