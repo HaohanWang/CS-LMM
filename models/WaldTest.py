@@ -8,6 +8,7 @@ class WaldTest:
         self.alpha = alpha
         self.fdr = fdr
 
+        
     def tstat(self, beta, var, sigma, q, N, log=False):
         ts = beta / np.sqrt(var * sigma)
         if log:
@@ -16,6 +17,7 @@ class WaldTest:
             ps = 2.0 * (stats.t.sf(np.abs(ts), N - q))
         return ts, ps
 
+    
     def fit(self, X, y):
         X0 = np.ones(len(y)).reshape(len(y), 1)
         [m, n] = X.shape
@@ -36,6 +38,7 @@ class WaldTest:
         p = np.array(p)
         self.beta = -np.log(p)
 
+        
     def fdrControl(self):
         tmp = np.exp(-self.beta)
         tmp = sorted(tmp)
@@ -46,6 +49,7 @@ class WaldTest:
                 threshold = tmp[i]
         self.beta[self.beta<-np.log(threshold)] = 0
 
+        
     def getBeta(self):
         if not self.fdr:
             self.beta[self.beta < -np.log(self.alpha)] = 0
