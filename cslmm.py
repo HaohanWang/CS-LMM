@@ -44,6 +44,7 @@ parser.add_option_group(modelGroup)
 
 (options, args) = parser.parse_args()
 
+
 def cross_val_score(clf, X, y, cv=5, learningRate=1):
     scores = []
     [n, p] = X.shape
@@ -60,6 +61,7 @@ def cross_val_score(clf, X, y, cv=5, learningRate=1):
         s = np.mean(np.square(ypr-yte))
         scores.append(s)
     return scores
+
 
 def crossValidation(clf, X, y, learningRate):
     minError = np.inf
@@ -79,6 +81,7 @@ def crossValidation(clf, X, y, learningRate):
     clf.fit(X, y)
     beta = clf.getBeta()
     return beta
+
 
 import sys
 import numpy as np
