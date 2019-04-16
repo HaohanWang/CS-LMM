@@ -5,6 +5,7 @@ import numpy as np
 import pysnptools
 import operator
 
+
 class FileReader():
     def __init__(self, fileName, imputation=True, fileType=None):
         self.fileName = fileName
@@ -53,6 +54,7 @@ class FileReader():
                 X[x,ind] = X[n,ind]
         return X
 
+    
     def simpleImputation(self, X):
         X[np.isnan(X)] = 0
         return X
@@ -69,11 +71,6 @@ class FileReader():
             snpdata = snpreader.read()
             X = snpdata.val
             Xname = snpdata.sid
-
-            # from pysnptools.snpreader import Pheno
-            # phenoreader = Pheno(self.fileName+".fam")
-            # phenodata = phenoreader.read()
-            # y = phenodata.val[:,-1]
             y = self.famReader(self.fileName+".fam")
 
         if self.fileType == 'csv':
@@ -91,10 +88,3 @@ class FileReader():
             X = self.simpleImputation(X)
             keep = True - np.isnan(y)
             return X[keep,:], y[keep], Xname
-
-if __name__ == '__main__':
-    fr = FileReader(fileName='../data/snps.132k')
-    X, y, Xname = fr.readFiles()
-    a, b = np.where(np.isnan(X)==1)
-    print a
-    print b
