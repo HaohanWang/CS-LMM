@@ -27,6 +27,7 @@ def matrixMult(A, B):
 
     return linalg.blas.dgemm(alpha=1., a=AA, b=BB, trans_a=transA, trans_b=transB)
 
+
 def factor(X, rho):
     """
     computes cholesky factorization of the kernel K = 1/rho*XX^T + I
@@ -41,6 +42,7 @@ def factor(X, rho):
     K = 1 / rho * scipy.dot(X, X.T) + scipy.eye(n_s)
     U = linalg.cholesky(K)
     return U
+
 
 def tstat(beta, var, sigma, q, N, log=False):
 
@@ -60,6 +62,7 @@ def tstat(beta, var, sigma, q, N, log=False):
         raise Exception("Something bad happened :(")
         # return ts, ps
     return ts.sum(), ps.sum()
+
 
 def nLLeval(ldelta, Uy, S, REML=True):
     """
