@@ -14,24 +14,31 @@ class Lasso:
         self.logistic = logistic
         self.weighted = weighted
 
+        
     def setLambda(self, lam):
         self.lam = lam
 
+        
     def setLogisticFlag(self, logistic):
         self.logistic = logistic
 
+        
     def setWeightedFlag(self, weighted):
         self.weighted = weighted
 
+        
     def setLearningRate(self, lr):
         self.lr = lr
 
+        
     def setMaxIter(self, a):
         self.maxIter = a
 
+        
     def setTol(self, t):
         self.tol = t
 
+        
     def fit(self, X, y):
         if self.logistic:
             if self.weighted:
@@ -64,6 +71,7 @@ class Lasso:
             resi = self.cost(X, y)
         return self.beta
 
+    
     def cost(self, X, y):
         if self.logistic:
             if not self.weighted:
@@ -78,6 +86,7 @@ class Lasso:
             return 0.5 * np.sum(np.square(y - np.dot(X, self.beta)).transpose()) + self.lam * linalg.norm(
                 self.beta, ord=1)
 
+        
     def proximal_gradient(self, X, y):
         if self.logistic:
             if not self.weighted:
@@ -89,21 +98,25 @@ class Lasso:
         else:
             return -np.dot(X.transpose(), (y.reshape((y.shape[0], 1)) - (np.dot(X, self.beta))))
 
+        
     def proximal_proj(self, B):
         t = self.lam * self.lr
         zer = np.zeros_like(B)
         result = np.maximum(zer, B - t) - np.maximum(zer, -B - t)
         return result
 
+    
     def predict(self, X):
         X0 = np.ones(X.shape[0]).reshape(X.shape[0], 1)
         X = np.hstack([X, X0])
         return np.dot(X, self.beta)
 
+    
     def getBeta(self):
         self.beta = self.beta.reshape(self.beta.shape[0])
         return self.beta[:-1]
 
+    
     def stopCheck(self, prev, new, pg, X, y):
         if np.square(linalg.norm((y - (np.dot(X, new))))) <= \
                                 np.square(linalg.norm((y - (np.dot(X, prev))))) + np.dot(pg.transpose(), (
