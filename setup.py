@@ -7,7 +7,7 @@ setup(
       author = "Haohan Wang",
       author_email='haohanw@cs.cmu.edu',
       url = "https://github.com/HaohanWang/CS-LMM",
-      description = "Discovering Weaker Genetic Associations Guided by Known Associations, with Application to Alcoholism and Alzheimer's Disease Studies",
+      description = "Discovering Genetic Variants with Weak Associations Guided by Known Variants",
       packages=['models', 'utility'],
       scripts=['cslmm.py'],
     )
