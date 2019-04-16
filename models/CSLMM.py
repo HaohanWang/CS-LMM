@@ -19,33 +19,43 @@ class CSLMM:
         self.logistic = logistic
         self.weighted = weighted
 
+        
     def setLambda(self, ldb):
         self.lam = ldb
 
+        
     def setLogisticFlag(self, logistic):
         self.logistic = logistic
 
+        
     def setWeightedFlag(self, weighted):
         self.weighted = weighted
 
+        
     def setLearningRate(self, lr):
         self.lr2 = lr
 
+        
     def setLearningRate1(self, lr):
         self.lr1 = lr
 
+        
     def setTolerance(self, tol):
         self.tol = tol
 
+        
     def setMaxIter(self, m):
         self.maxIter = m
 
+        
     def setKnownInd(self, ind):  # set the known associations with index, 0, 2, 3 etc.
         self.kI = ind
 
+        
     def setSnpFlag(self, snpFile):
         self.snpFile = snpFile
 
+        
     def calculateLinearDependentCorrelatedVariables(self, X):
         [m, n] = X.shape
         result = []
@@ -71,6 +81,7 @@ class CSLMM:
             pass
         return result
 
+    
     def cross_val_score(self, clf, X, y, cv=5):
         scores = []
         [n, p] = X.shape
@@ -90,6 +101,7 @@ class CSLMM:
             scores.append(s)
         return scores
 
+    
     def fitBeta(self, X, y):
         self.phase1model = Lasso(lam=0, logistic=self.logistic, weighted=self.weighted)
         self.phase1model.setLearningRate(self.lr1)
@@ -98,6 +110,7 @@ class CSLMM:
         yr = self.phase1model.predict(X)
         return beta, yr
 
+    
     def populationStratification(self, X, y, K=None, S=None, U=None):
         [n_s, n_f] = X.shape
         if K is None:
@@ -115,6 +128,7 @@ class CSLMM:
 
         return SUX, SUy.reshape(SUy.shape[0])
 
+    
     def nullModel(self, y, K, S=None, U=None, numintervals=500, ldeltamin=-5, ldeltamax=5, scale=0, p=1):
         ldeltamin += scale
         ldeltamax += scale
@@ -143,6 +157,7 @@ class CSLMM:
                     ldeltaopt_glob = ldeltaopt
         return S, U, ldeltaopt_glob
 
+    
     def setUp(self, X, y, K=None, S=None, U=None):
         # X, y = self.populationStratification(X, y, K, S, U)
         self.y = y
@@ -170,12 +185,14 @@ class CSLMM:
         self.nkI = []
         self.X2, self.y2 = self.populationStratification(self.X2, self.y2)
 
+        
     def assemble(self):
         p = len(self.kI) + len(self.kIComplementary) + len(self.kINone)
         self.beta = np.zeros([p])
         self.beta[self.kI] = self.b1
         self.beta[self.kIComplementary] = self.b2
 
+        
     def fit(self, X=None, y=None):
         self.phase2model = Lasso()
         self.phase2model.setLearningRate(self.lr2)
@@ -186,10 +203,12 @@ class CSLMM:
 
         self.b2 = self.phase2model.getBeta()
 
+        
     def getBeta(self):
         self.assemble()
         return self.beta
 
+    
     def predict(self, X=None):
         Xtmp1 = X[:, self.kI]
         Xtmp2 = X[:, self.kIComplementary]
