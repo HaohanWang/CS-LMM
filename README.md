@@ -1,3 +1,5 @@
+![cslmm](cslmm.PNG "CSLMM")
+
 # CS-LMM (Constrained Sparse multi-locus Linear Mixed Model)
 
 Implementation of CS-LMM in this paper:
