@@ -48,7 +48,7 @@ python cslmm.py -n data/mice.plink
 ## Python Users
 Proficient python users can directly call the CMM method with python code, see example starting at [Line 107](https://github.com/HaohanWang/CS-LMM/blob/master/cslmm.py#L107)
 
-## Installation
+## Installation (Not Required)
 You will need to have numpy, scipy and pysnptool installed on your current system.
 You can install CS-LMM using pip by doing the following
 
