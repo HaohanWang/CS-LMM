@@ -4,7 +4,7 @@
 
 Implementation of CS-LMM in this paper:
 
-Wang H, Vanyukov MM, Xing EP, and Wu W. Discovering Genetic Variants with Weak Associations Guided by Known Variants (_under review_)
+Wang, H., Vanyukov, M. M., Xing, E. P., & Wu, W. (2020). Discovering weaker genetic associations guided by known associations. BMC Medical Genomics, 13(3), 1-10.
 
 ## Introduction
 
